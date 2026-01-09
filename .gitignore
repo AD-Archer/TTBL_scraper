@@ -48,7 +48,7 @@ htmlcov/
 Thumbs.db
 *.db
 # Project specific
-ttbl_data_backup_*/
+# ttbl_data_backup_*/
 scraper.log
 scraper_py.log
 

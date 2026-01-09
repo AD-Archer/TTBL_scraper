@@ -1,33 +1,191 @@
-# TTBL Scraper
+# MLTT Scrape - Table Tennis Data Collection
 
-A web scraper for the German Table Tennis League (TTBL) that extracts match data, player statistics, and game results from the TTBL website.
+A comprehensive data scraping project for collecting table tennis (ping pong) data from multiple sources including WTT/ITTF (international) and TTBL (German Bundesliga).
 
-## Features
+## Project Overview
 
-- **Real-time data access** - Scrapes live data from TTBL API; results available as soon as matches finish
-- Scrapes all matches from the TTBL Bundesliga
-- Extracts player information and statistics
-- Tracks win/loss rates per player
-- Stores data in structured JSON format
-- Multiple query examples for data analysis
-- Point-by-point scoring data with millisecond precision
+This project aims to collect comprehensive table tennis data including:
+- Player profiles and rankings
+- Match results with game-by-game scores
+- Tournament information
+- Historical performance data
+- League-specific statistics
 
-## Quick Start
+The project uses multiple specialized AI agents to discover data sources and build robust scrapers for both international (WTT/ITTF) and domestic league (TTBL) data collection.
 
-### Run Enhanced Scraper
+## Current Status
+
+✅ **Working Components:**
+- **WTT/ITTF International Data:**
+  - Rankings scraper (`wtt_ittf_scraper.py`)
+  - Comprehensive data collector (`comprehensive_collector.py`)
+  - Player ID discovery (195+ known IDs, expandable)
+  - Match data collection via Fabrik API
+  - Gender-based player separation
+
+- **TTBL German Bundesliga:**
+  - Enhanced scraper (`scrape_ttbl_enhanced.py`)
+  - Real-time match data collection
+  - Player statistics and ELO verification
+  - Complete season coverage
+
+⚠️ **Limitations:**
+- Historical rankings require browser automation (Cloudflare protected)
+- Player DOB not available from public APIs
+- Some endpoints require authentication
+
+## Scrapers Overview
+
+### wtt_ittf_scraper.py - Rankings Scraper
+
+**Location:** `ITTF/WTT/discovery/agent4/scrapers/wtt_ittf_scraper.py`
+
+**Purpose:** Collect current player rankings data from the WTT API.
+
+**How it Works:**
+- Makes HTTP requests to the WTT rankings API endpoint
+- Implements retry logic with exponential backoff
+- Supports single player, batch processing, and ID discovery modes
+- Validates player IDs and extracts ranking information
+
+**Key Features:**
+- Rate limiting protection
+- Error handling and logging
+- JSON output with metadata
+- CLI interface for easy operation
+
+### comprehensive_collector.py - Unified Data Collector
+
+**Location:** `ITTF/WTT/discovery/agent4/scrapers/comprehensive_collector.py`
+
+**Purpose:** Comprehensive collection of player and match data from multiple sources.
+
+**How it Works:**
+- Integrates rankings API and Fabrik match data API
+- Processes player IDs from Agent 1 findings
+- Extracts gender information from event codes
+- Parses match data including game-by-game scores
+- Expands player database via match discovery
+
+**Key Features:**
+- Gender separation (MS=Male, WS=Female)
+- Game score parsing from space-separated strings
+- Player database expansion
+- Multi-year data collection
+- Structured JSON outputs
+
+### scrape_ttbl_enhanced.py - TTBL German Bundesliga Scraper
+
+**Location:** `TTBL/scrape_ttbl_enhanced.py`
+
+**Purpose:** Collect comprehensive match data, player statistics, and game results from the German Table Tennis Bundesliga (TTBL).
+
+**How it Works:**
+- Scrapes match schedule from TTBL website
+- Fetches detailed match data via TTBL API endpoints
+- Extracts player information and game-by-game scores
+- Calculates win/loss statistics and rankings
+- Supports real-time data collection (results available as soon as matches finish)
+
+**Key Features:**
+- **Real-time data access** - No caching delays, fresh results immediately after matches
+- Point-by-point scoring with millisecond precision
+- Player win/loss rate tracking
+- ELO data verification system
+- Complete season coverage (all gamedays)
+- Structured JSON output for analysis
+
+## Installation & Setup
+
+### Dependencies
+
 ```bash
-# Scrape current season
-python3 scrape_ttbl_enhanced.py
-
-# Edit script to change season
-# Modify SEASON and NUM_GAMEDAYS in scrape_ttbl_enhanced.py
-# SEASON = "2024-2025"
-# NUM_GAMEDAYS = 24  # Set high (e.g., 30) - script skips non-existent gamedays
+pip install requests
 ```
 
-**Time:** ~4-5 minutes for full season
+### Directory Structure
 
-### Check Results
+```
+mltt-scrape/
+├── ITTF/
+│   └── WTT/
+│       ├── discovery/
+│       │   ├── agent1/
+│       │   │   └── player_ids.json       # Known player IDs
+│       │   └── agent4/
+│       │       └── scrapers/
+│       │           ├── wtt_ittf_scraper.py
+│       │           └── comprehensive_collector.py
+│       └── data/                         # WTT/ITTF output directory
+│           └── wtt_ittf/
+│               ├── players/
+│               ├── matches/
+│               └── rankings/
+└── TTBL/                                 # German Bundesliga scraper
+    ├── scrape_ttbl_enhanced.py          # Main scraper script
+    ├── verify_elo_data.py               # ELO verification
+    ├── docs/                            # TTBL documentation
+    ├── ttbl_data/                       # TTBL output directory
+    │   ├── metadata.json
+    │   ├── matches/
+    │   ├── players/
+    │   └── stats/
+    └── README.md                        # TTBL-specific README
+```
+
+### Environment Setup
+
+1. Ensure Python 3.7+ is installed
+2. Install dependencies: `pip install requests`
+3. Create output directories if needed
+
+## Usage Examples
+
+### Rankings Scraper
+
+**Single Player Rankings:**
+```bash
+cd ITTF/WTT/discovery/agent4/scrapers
+python3 wtt_ittf_scraper.py --player 121558
+```
+
+**Batch Processing:**
+```bash
+python3 wtt_ittf_scraper.py --batch 121558,101919,105649
+```
+
+**Player ID Discovery:**
+```bash
+python3 wtt_ittf_scraper.py --discover 110000 110050
+```
+
+### Comprehensive Collector
+
+**Full Data Collection:**
+```bash
+cd ITTF/WTT/discovery/agent4/scrapers
+python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --years 2025
+```
+
+**Multi-Year Collection:**
+```bash
+python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --years 2025,2024,2023
+```
+
+**Custom Output Directory:**
+```bash
+python3 comprehensive_collector.py --output-dir ./my_data --years 2025
+```
+
+### TTBL Scraper
+
+**Full Season Collection:**
+```bash
+cd TTBL
+python3 scrape_ttbl_enhanced.py
+```
+
+**Check Results:**
 ```bash
 # View metadata
 cat ttbl_data/metadata.json | jq '.'
@@ -39,58 +197,100 @@ jq '.[0:10] | .[] | {name, gamesPlayed, wins, losses, winRate}' ttbl_data/stats/
 python3 verify_elo_data.py
 ```
 
-## Project Structure
+## Data Collected
 
-```
-.
-├── scrape_ttbl_enhanced.py      # Python scraper script
-├── verify_elo_data.py           # Data verification for ELO system
-├── README.md                     # This file
-├── .gitignore                    # Git ignore patterns
-├── docs/                         # Documentation
-│   ├── CHANGELOG.md             # Version history
-│   ├── ELO_DATA_VERIFICATION.md # ELO system data verification
-│   └── ENHANCED_SCRAPER_GUIDE.md # Detailed guide
-└── ttbl_data/                    # Output data folder
-    ├── metadata.json             # Scrape session metadata
-    ├── match_ids.txt            # All match IDs
-    ├── matches/                  # Individual match JSON files
-    ├── players/                  # Player data
-    └── stats/                    # Player statistics and game results
-```
+### Player Data Structure
 
-## Requirements
-
-- Python 3.x
-- `requests` library
-- `jq` (for JSON querying, optional but recommended)
-
-### Install dependencies
-```bash
-pip install requests
+```json
+{
+  "ittf_id": "121558",
+  "first_name": "Chuqin",
+  "last_name": "WANG",
+  "full_name": "WANG Chuqin",
+  "nationality": "CHN",
+  "gender": "M",
+  "source": "rankings_api",
+  "rankings": {
+    "ms_rank": 1,
+    "ws_rank": null,
+    "points": 9925,
+    "event_codes": ["MS", "MDI"]
+  },
+  "scraped_at": "2026-01-09T22:30:00Z"
+}
 ```
 
-### Install jq (Linux)
-```bash
-sudo apt install jq  # Debian/Ubuntu
-sudo dnf install jq  # Fedora
+### Match Data Structure
+
+```json
+{
+  "match_id": "10602874",
+  "year": "2025",
+  "tournament": "WTT Youth Contender San Francisco 2026",
+  "event": "U11MS",
+  "stage": "Main Draw",
+  "round": "Final",
+  "player_a": {
+    "id": 209656,
+    "name": "SUN Frank (USA)",
+    "association": "USA"
+  },
+  "player_b": {
+    "id": 209645,
+    "name": "BAVISKAR Shuban (USA)",
+    "association": "USA"
+  },
+  "games": [
+    {"game_number": 1, "player_score": 3, "opponent_score": 11},
+    {"game_number": 2, "player_score": 3, "opponent_score": 11},
+    {"game_number": 3, "player_score": 8, "opponent_score": 11},
+    {"game_number": 4, "player_score": 11, "opponent_score": 8}
+  ],
+  "winner_id": 209645,
+  "walkover": false
+}
 ```
 
-## Data Output
+### Rankings Data Structure
 
-### Enhanced Scraper creates:
-- `metadata.json` - Scrape session metadata
-- `match_ids.txt` - All 108 match IDs
-- `matches/match_{uuid}.json` - Full match data for each match
-- `players/all_players.json` - All players with duplicates
-- `players/unique_players.json` - Deduplicated player list
-- `stats/player_stats_final.json` - Player stats sorted by win rate
-- `stats/top_players.json` - Top 20 players (min 5 games)
-- `stats/games_data.json` - Individual game results
-- `stats/match_states.json` - Match state breakdown
-- `matches_summary.json` - Match summaries with metadata
+```json
+{
+  "IttfId": "121558",
+  "PlayerName": "WANG Chuqin",
+  "CountryCode": "CHN",
+  "SubEventCode": "MS",
+  "RankingYear": "2026",
+  "RankingWeek": "2",
+  "RankingPointsYTD": "9925",
+  "CurrentRank": "1",
+  "PreviousRank": "1"
+}
+```
 
-## Player Statistics Example
+### TTBL Match Data Structure
+
+```json
+{
+  "match_id": "bf29638f-9165-4203-982a-6a25f36452be",
+  "season": "2025-2026",
+  "gameday": 1,
+  "home_team": "Borussia Düsseldorf",
+  "away_team": "1. FC Saarbrücken",
+  "players": [
+    {
+      "name": "Bastian Steger",
+      "team": "Borussia Düsseldorf",
+      "games": [11, 11, 8, 11],
+      "opponent_games": [8, 7, 11, 9]
+    }
+  ],
+  "result": "3:2",
+  "state": "Finished",
+  "timestamp": "2026-01-09T20:00:00Z"
+}
+```
+
+### TTBL Player Statistics Structure
 
 ```json
 {
@@ -104,68 +304,225 @@ sudo dnf install jq  # Fedora
 }
 ```
 
-## Documentation
+## Data Sources
 
-- **[`docs/DATA_COVERAGE.md`](docs/DATA_COVERAGE.md)** - **Data freshness, complete data catalog, and what's missing**
-- **[`docs/ENHANCED_SCRAPER_GUIDE.md`](docs/ENHANCED_SCRAPER_GUIDE.md)** - Complete guide with data models, query examples, and troubleshooting
-- **[`docs/ELO_DATA_VERIFICATION.md`](docs/ELO_DATA_VERIFICATION.md)** - Data verification for ELO rating system implementation
-- **[`docs/CHANGELOG.md`](docs/CHANGELOG.md)** - Version history and changes
+### Rankings API
+- **Endpoint:** `https://wttcmsapigateway-new.azure-api.net/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals`
+- **Authentication:** None required
+- **Parameters:** `IttfId={id}&q=1`
+- **Rate Limit:** None observed, but use delays
+- **Data:** Current week rankings for all events
 
-## API Endpoints
+### Fabrik Match API
+- **Endpoint:** `https://results.ittf.link/index.php?option=com_fabrik&view=list&listid=31&format=json`
+- **Authentication:** None required
+- **Parameters:** `vw_matches___yr[value]={year}&limit={n}`
+- **Data:** Match results, game scores, player IDs
+- **Format:** Space-separated game scores: `"3:11 3:11 8:11"`
 
-The scraper uses the following TTBL endpoints (no authentication required):
+### Player ID Sources
+- **Agent 1 Findings:** 195 known IDs from rankings pages
+- **Match Data:** Additional IDs discovered via Fabrik API
+- **Range:** 100000-150000 (most active players)
 
+### TTBL APIs
+- **Match Data:** `https://www.ttbl.de/api/internal/match/{matchId}`
+- **Schedule:** `https://www.ttbl.de/bundesliga/gameschedule/{season}/{gameday}/all`
+- **Authentication:** None required
+- **Rate Limit:** 1 second delay recommended
+- **Data:** Real-time match results, point-by-point scoring, player stats
+
+## File Structure
+
+### Output Directories
+
+**WTT/ITTF Output:**
 ```
-Match Data:  GET https://www.ttbl.de/api/internal/match/{matchId}
-Schedule:    https://www.ttbl.de/bundesliga/gameschedule/{season}/{gameday}/all
+data/wtt_ittf/
+├── players/
+│   ├── players_database.json     # All players
+│   ├── gender/
+│   │   ├── players_men.json      # Male players
+│   │   ├── players_women.json    # Female players
+│   │   └── players_mixed.json    # Mixed doubles
+│   └── players_by_id/            # Individual files
+├── matches/
+│   ├── matches_2025.json         # Year-specific
+│   ├── matches_2024.json
+│   └── matches_by_player/        # Per player
+├── rankings/
+│   └── rankings_current.json     # Current rankings
+└── collection_report.json        # Statistics
 ```
 
-## Rate Limiting
+**TTBL Output:**
+```
+ttbl_data/
+├── metadata.json                 # Scrape session metadata
+├── match_ids.txt                 # All match IDs
+├── matches_summary.json          # Match summaries
+├── matches/                      # Individual match JSON files
+├── players/
+│   ├── all_players.json          # All players (with duplicates)
+│   └── unique_players.json       # Deduplicated player list
+└── stats/
+    ├── player_stats_final.json   # Player stats by win rate
+    ├── top_players.json          # Top 20 players (min 5 games)
+    ├── games_data.json           # Individual game results
+    └── match_states.json         # Match state breakdown
+```
 
-- Default: 1 second delay between requests
-- Be respectful to the server
-- If rate limited: Increase `DELAY` variable in the script
+### Source Files
+
+**WTT/ITTF Source Files:**
+```
+ITTF/WTT/
+├── discovery/
+│   ├── agent1/
+│   │   ├── findings.md           # Discovery report
+│   │   └── player_ids.json       # Initial player IDs
+│   ├── agent2/findings.md        # Historical limitations
+│   ├── agent3/findings.md        # Match API discovery
+│   └── agent4/
+│       ├── findings.md           # Scraper development
+│       └── scrapers/             # Working scrapers
+└── docs/                         # Documentation
+    ├── API_DISCOVERY.md
+    ├── NEXT_STEPS.md
+    └── UNIFIED_STRATEGY.md
+```
+
+**TTBL Source Files:**
+```
+TTBL/
+├── scrape_ttbl_enhanced.py       # Main scraper script
+├── verify_elo_data.py            # ELO data verification
+├── docs/
+│   ├── CHANGELOG.md             # Version history
+│   ├── DATA_COVERAGE.md         # Data catalog & freshness
+│   ├── ELO_DATA_VERIFICATION.md # ELO verification guide
+│   └── ENHANCED_SCRAPER_GUIDE.md # Detailed usage guide
+└── README.md                     # TTBL-specific documentation
+```
 
 ## Troubleshooting
 
-### Data Quality Issues?
-Run the verification script:
-```bash
-python3 verify_elo_data.py
+### Common Issues
+
+**LSP Cache Issues (Python 3.14)**
+```
+Error: Module not found
+Solution: Use Python 3.8-3.11, or run manually without LSP
 ```
 
-### No matches found?
-Check if schedule page structure changed:
-```bash
-curl -sL "https://www.ttbl.de/bundesliga/gameschedule/2025-2026/1/all" | head -50
+**No Data Returned**
+```
+Check: Is the player ID valid?
+Test: curl "https://wttcmsapigateway-new.azure-api.net/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals?IttfId=121558&q=1"
 ```
 
-### Player names missing?
-- Scheduled matches have `null` players (lineups not announced)
-- Only "Finished" games count for stats
+**Rate Limiting**
+```
+Add delays: time.sleep(1) between requests
+Use batch processing sparingly
+```
 
-## Data Freshness & Real-Time Capabilities
+**Fabrik API Returns HTML**
+```
+Issue: Sometimes returns HTML instead of JSON
+Solution: Use browser automation or retry with different parameters
+```
 
-The scraper provides **up-to-date results as soon as matches finish**. Since it fetches data directly from TTBL's live API, there's no caching delay - when TTBL marks a match as "Finished", the scraper can immediately retrieve complete results.
+**TTBL Data Quality Issues**
+```
+Run verification: python3 verify_elo_data.py
+Check for missing player names (scheduled but not announced matches)
+```
 
-**Key Points:**
-- ✅ No caching - fresh data on every run
-- ✅ Live match state tracking (Finished, Live, Inactive)
-- ✅ Point-by-point scoring with millisecond timestamps
-- ⚠️ Polling-based (run scraper to check for updates)
-- ⚠️ No incremental scraping yet (fetches entire season, ~4-5 min)
+**TTBL No Matches Found**
+```
+Check schedule URL: curl -sL "https://www.ttbl.de/bundesliga/gameschedule/2025-2026/1/all" | head -50
+Verify season format and gameday numbers
+```
 
-**For complete details**, see **[`docs/DATA_COVERAGE.md`](docs/DATA_COVERAGE.md)** for:
-- Real-time data capabilities
-- Complete data catalog (50+ fields available)
-- Missing data analysis
-- Data quality metrics
+### Error Messages
 
-## License
+- `{"Result": null}` → Invalid player ID
+- `401 Unauthorized` → Authentication required (blocked endpoint)
+- `403 Forbidden` → Cloudflare protection (historical data)
+- `ModuleNotFoundError` → Install dependencies: `pip install requests`
 
-This project is for educational purposes only. Please respect the TTBL website's terms of service.
+### Performance Tips
+
+- Use batch processing for multiple players
+- Add delays between API calls (1-2 seconds)
+- Process data in chunks for large collections
+- Monitor output file sizes
+
+## Contributing
+
+### Adding New Scrapers
+
+1. Follow the pattern in `wtt_ittf_scraper.py`
+2. Use `ScraperConfig` dataclass for settings
+3. Implement retry logic with exponential backoff
+4. Add CLI interface with argparse
+5. Document data sources and limitations
+
+### Extending Data Collection
+
+1. **New APIs:** Test authentication requirements first
+2. **New Data Types:** Update data models and JSON schemas
+3. **Historical Data:** Implement browser automation for Cloudflare bypass
+4. **Third-Party APIs:** Evaluate SportDevs/Sportradar for missing data
+
+### Testing
+
+```bash
+# Test single player
+python3 wtt_ittf_scraper.py --player 121558
+
+# Test comprehensive collection
+python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --years 2025 --limit 10
+
+# Verify output
+ls -la data/wtt_ittf/
+```
+
+### Code Standards
+
+- Use type hints and dataclasses
+- Include docstrings for all functions
+- Handle exceptions gracefully
+- Log important operations
+- Follow PEP 8 style guidelines
+
+## License & Credits
+
+This project was developed using specialized AI agents for data discovery and scraper implementation.
+
+**Agents Used:**
+- Agent 1: Player ID Discovery
+- Agent 2: Historical Rankings Research
+- Agent 3: Match Data API Discovery
+- Agent 4: Scraper Implementation
+
+**Data Sources:**
+- World Table Tennis (WTT)
+- International Table Tennis Federation (ITTF)
+- results.ittf.link (Fabrik CMS)
+- TTBL (German Table Tennis Bundesliga)
+
+## Contact & Support
+
+For issues with the scrapers or data collection:
+1. Check the agent findings in `discovery/agent*/findings.md`
+2. Test API endpoints manually with curl
+3. Review troubleshooting section above
+4. Check for rate limiting or authentication changes
 
 ---
 
 **Last Updated:** January 9, 2026
-**Version:** Enhanced Scraper v2.1
+**Version:** 1.0
+**Status:** Production Ready for WTT/ITTF and TTBL Data Collection
