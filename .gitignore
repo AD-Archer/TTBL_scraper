@@ -46,11 +46,11 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
-
+*.db
 # Project specific
 ttbl_data_backup_*/
 scraper.log
 scraper_py.log
 
 # Data files (comment out if you want to track data)
-ttbl_data/
+ttbl_data*/

@@ -2,6 +2,53 @@
 
 All notable changes to TTBL scraper functionality will be documented in this file.
 
+## [2.2] - 2026-01-09
+
+### Added
+- **Graceful Gameday Handling**
+  - Script now handles missing gamedays without failing
+  - Set `NUM_GAMEDAYS` to high values (e.g., 30) to collect as many gamedays as possible
+  - Skipped gamedays are reported with reason (HTTP 404, no matches, network error)
+  - Tracks successful vs failed gamedays
+- **Data Coverage Documentation** (`docs/DATA_COVERAGE.md`)
+  - Complete analysis of real-time data capabilities
+  - Scraper can fetch results **as soon as matches finish** (no caching)
+  - Comprehensive catalog of 50+ available data fields
+  - Point-by-point scoring data with millisecond precision
+  - Analysis of missing/not-available data
+  - Data quality metrics and recommended filters
+- **README Updates**
+  - Added data freshness section highlighting real-time capabilities
+  - Updated features list to emphasize live data access
+  - Added reference to DATA_COVERAGE.md for complete details
+
+### Documented
+- **Real-Time Capabilities**
+  - API provides live match state tracking (Finished, Live, Inactive)
+  - `updateCount` field shows number of scoring updates (e.g., 483 updates per match)
+  - `scoringUpdates` array contains every point, set, timeout with timestamps
+  - No caching on scraper side - fresh data on every run
+- **Available Data**
+  - Match-level: ID, state, timestamp, score, attendance, venue
+  - Team-level: ID, name, rank, standings, logo, game/set/ball counts
+  - Player-level: ID, name, photo, lineup, substitutes
+  - Game-level: 5 games per match, set-by-set scores, winner
+  - Advanced stats: Points on serve/return, leads, streaks, lucky shots, timeouts
+  - Point-by-point: Every point with bwRating, ace, error, lucky/net/edge flags
+- **Missing Data**
+  - Historical standings (can calculate from results)
+  - Player demographics (only name/ID/photo available)
+  - Team composition history/transfers
+  - Match officials/referees
+  - Coaching data
+  - Video content (links only)
+
+### Notes
+- Season configuration in `scrape_ttbl_enhanced.py` can be changed to scrape past/current/future seasons
+- Recommended pattern: Run scraper regularly to get latest finished match results
+
+---
+
 ## [2.1] - 2026-01-08
 
 ### Added

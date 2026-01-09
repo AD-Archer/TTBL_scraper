@@ -13,8 +13,10 @@ from collections import Counter
 BASE_URL = "https://www.ttbl.de"
 API_ENDPOINT = f"{BASE_URL}/api/internal/match"
 OUTPUT_DIR = Path("./ttbl_data")
-SEASON = "2025-2026"
-NUM_GAMEDAYS = 18
+SEASON = "2024-2025"
+NUM_GAMEDAYS = (
+    24  # Script will skip non-existent gamedays; set high to collect all available
+)
 DELAY = 1
 
 
@@ -35,22 +37,45 @@ print("=" * 50)
 print()
 
 all_match_ids = []
+successful_gamedays = 0
+failed_gamedays = []
+
 for gameday in range(1, NUM_GAMEDAYS + 1):
     print(f"  Gameday {gameday}/{NUM_GAMEDAYS}...", end="\r")
 
     schedule_url = f"{BASE_URL}/bundesliga/gameschedule/{SEASON}/{gameday}/all"
-    html = fetch_url(schedule_url)
 
-    match_ids = re.findall(r'/bundesliga/gameday/[^"]+', html)
-    match_ids = [re.findall(r"[a-f0-9-]{36}$", mid) for mid in match_ids]
-    match_ids = [mid[0] for mid in match_ids if mid]
+    try:
+        html = fetch_url(schedule_url)
 
-    all_match_ids.extend(match_ids)
+        match_ids = re.findall(r'/bundesliga/gameday/[^"]+', html)
+        match_ids = [re.findall(r"[a-f0-9-]{36}$", mid) for mid in match_ids]
+        match_ids = [mid[0] for mid in match_ids if mid]
+
+        if match_ids:
+            all_match_ids.extend(match_ids)
+            successful_gamedays += 1
+        else:
+            failed_gamedays.append((gameday, "no matches"))
+
+    except urllib.error.HTTPError as e:
+        failed_gamedays.append((gameday, f"HTTP {e.code}"))
+    except urllib.error.URLError as e:
+        failed_gamedays.append((gameday, f"URL error: {e.reason}"))
+    except Exception as e:
+        failed_gamedays.append((gameday, str(e)))
 
     time.sleep(DELAY)
 
 print()
-print(f"Discovered {len(all_match_ids)} match IDs across {NUM_GAMEDAYS} gamedays")
+print(
+    f"Discovered {len(all_match_ids)} match IDs across {successful_gamedays} successful gamedays"
+)
+
+if failed_gamedays:
+    print(f"Skipped {len(failed_gamedays)} gamedays:")
+    for gameday, reason in failed_gamedays:
+        print(f"  - Gameday {gameday}: {reason}")
 
 all_match_ids = sorted(list(set(all_match_ids)))
 print(f"Unique matches: {len(all_match_ids)}")

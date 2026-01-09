@@ -4,21 +4,25 @@ A web scraper for the German Table Tennis League (TTBL) that extracts match data
 
 ## Features
 
+- **Real-time data access** - Scrapes live data from TTBL API; results available as soon as matches finish
 - Scrapes all matches from the TTBL Bundesliga
 - Extracts player information and statistics
 - Tracks win/loss rates per player
 - Stores data in structured JSON format
 - Multiple query examples for data analysis
+- Point-by-point scoring data with millisecond precision
 
 ## Quick Start
 
 ### Run Enhanced Scraper
 ```bash
-# Current season (2025-2026)
+# Scrape current season
 python3 scrape_ttbl_enhanced.py
 
-# Specific season
-python3 scrape_ttbl_enhanced.py --season 2024-2025
+# Edit script to change season
+# Modify SEASON and NUM_GAMEDAYS in scrape_ttbl_enhanced.py
+# SEASON = "2024-2025"
+# NUM_GAMEDAYS = 24  # Set high (e.g., 30) - script skips non-existent gamedays
 ```
 
 **Time:** ~4-5 minutes for full season
@@ -102,6 +106,7 @@ sudo dnf install jq  # Fedora
 
 ## Documentation
 
+- **[`docs/DATA_COVERAGE.md`](docs/DATA_COVERAGE.md)** - **Data freshness, complete data catalog, and what's missing**
 - **[`docs/ENHANCED_SCRAPER_GUIDE.md`](docs/ENHANCED_SCRAPER_GUIDE.md)** - Complete guide with data models, query examples, and troubleshooting
 - **[`docs/ELO_DATA_VERIFICATION.md`](docs/ELO_DATA_VERIFICATION.md)** - Data verification for ELO rating system implementation
 - **[`docs/CHANGELOG.md`](docs/CHANGELOG.md)** - Version history and changes
@@ -139,11 +144,28 @@ curl -sL "https://www.ttbl.de/bundesliga/gameschedule/2025-2026/1/all" | head -5
 - Scheduled matches have `null` players (lineups not announced)
 - Only "Finished" games count for stats
 
+## Data Freshness & Real-Time Capabilities
+
+The scraper provides **up-to-date results as soon as matches finish**. Since it fetches data directly from TTBL's live API, there's no caching delay - when TTBL marks a match as "Finished", the scraper can immediately retrieve complete results.
+
+**Key Points:**
+- ✅ No caching - fresh data on every run
+- ✅ Live match state tracking (Finished, Live, Inactive)
+- ✅ Point-by-point scoring with millisecond timestamps
+- ⚠️ Polling-based (run scraper to check for updates)
+- ⚠️ No incremental scraping yet (fetches entire season, ~4-5 min)
+
+**For complete details**, see **[`docs/DATA_COVERAGE.md`](docs/DATA_COVERAGE.md)** for:
+- Real-time data capabilities
+- Complete data catalog (50+ fields available)
+- Missing data analysis
+- Data quality metrics
+
 ## License
 
 This project is for educational purposes only. Please respect the TTBL website's terms of service.
 
 ---
 
-**Last Updated:** January 8, 2026
+**Last Updated:** January 9, 2026
 **Version:** Enhanced Scraper v2.1
