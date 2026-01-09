@@ -24,7 +24,7 @@ I have developed a **coordinated data collection strategy** that addresses ALL y
 ### Agent 1 ✅ COMPLETE
 **Available:** 195 unique ITTF player IDs from rankings pages
 - IDs range: 100696 - 212898
-- Stored in: `ITTF/WTT/discovery/agent1/player_ids.json`
+- Stored in: `ITTF/WTT/research/agents/agent1/player_ids.json`
 
 **How I Use It:**
 1. Start with these 195 IDs as FOUNDATION
@@ -330,14 +330,14 @@ pip3 install requests
 
 **Step 2: Create Output Directories**
 ```bash
-cd ITTF/WTT/discovery/agent4/scrapers
-mkdir -p data/wtt_ittf/{players,matches,cache,gender}
+cd ITTF/WTT/scripts
+mkdir -p ../artifacts/data/wtt_ittf/{players,matches,cache,gender}
 ```
 
 **Step 3: Run Full Collection (Single Year Test First)**
 ```bash
-cd ITTF/WTT/discovery/agent4/scrapers
-python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --years 2025
+cd ITTF/WTT/scripts
+python3 comprehensive_collector.py --agent1-file ../research/agents/agent1/player_ids.json --years 2025
 ```
 
 ### Short Term (After Fixing LSP Issues)
@@ -379,8 +379,8 @@ python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --
 ### From Original Agent 4 Goals:
 
 - [x] Rankings scraper working - ✅ wtt_ittf_scraper.py (and comprehensive_collector.py)
-- [x] Code in discovery/agent4/scrapers - ✅ Both scrapers created
-- [x] Documentation in discovery/agent4/findings.md - ✅ This file + findings_run2.md
+- [x] Code in scripts - ✅ Both scrapers created
+- [x] Documentation in research/agents/agent4/findings.md - ✅ This file + findings_run2.md
 - [x] Follows TTBL scraper patterns - ✅ Requests library, session management
 - [x] Implements rate limiting - ✅ 1 second delay between requests
 - [x] CLI interface - ✅ Multiple modes for different operations
@@ -392,12 +392,12 @@ python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --
 
 ### Agent 4 Deliverables:
 
-1. **`discovery/agent4/scrapers/wtt_ittf_scraper.py`** (402 lines)
+1. **`scripts/wtt_ittf_scraper.py`** (402 lines)
    - Existing rankings scraper from earlier
    - Single and batch player rankings fetch
    - CLI interface
 
-2. **`discovery/agent4/scrapers/comprehensive_collector.py`** (460 lines)
+2. **`scripts/comprehensive_collector.py`** (460 lines)
    - Full-featured data collector
    - Player and Match data models
    - Gender separation logic
@@ -406,7 +406,7 @@ python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --
    - Multi-year data collection
    - Comprehensive reporting
 
-3. **`discovery/agent4/findings_run2.md`** (this file)
+3. **`research/agents/agent4/findings_run2.md`** (this file)
    - Coordinated strategy across all agents
    - Cross-agent integration plan
    - Complete data models

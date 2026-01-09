@@ -76,7 +76,7 @@ All 4 agents have completed their discovery phase. We now have a clear path to a
 #### 1.1 Validate All 195 Player IDs with WTT API
 ```bash
 # Use Agent 4's rankings scraper
-cd ITTF/WTT/discovery/agent4/scrapers
+cd ITTF/WTT/scripts
 python3 wtt_ittf_scraper.py --batch <all 195 IDs from agent1>
 ```
 
@@ -156,7 +156,7 @@ def scrape_player_matches(player_id):
 
 **Solution B**: Agent 4's Fabrik Scraper (from Agent 3 findings)
 ```python
-# File: discovery/agent4/scrapers/fabrik_match_scraper.py
+# File: scripts/fabrik_match_scraper.py
 # Agent 3 recommended implementation
 # Extract player IDs and match data from Fabrik lists
 ```
@@ -476,14 +476,14 @@ data/
 
 ## File References
 
-- Agent 1: `/ITTF/WTT/discovery/agent1/findings.md`
-- Agent 1: `/ITTF/WTT/discovery/agent1/player_ids.json`
-- Agent 2: `/ITTF/WTT/discovery/agent2/findings.md`
-- Agent 2: `/ITTF/WTT/discovery/agent2/historical_endpoints.json`
-- Agent 3: `/ITTF/WTT/discovery/agent3/findings.md`
-- Agent 3: `/ITTF/WTT/discovery/agent3/match_data_access.json`
-- Agent 4: `/ITTF/WTT/discovery/agent4/findings.md`
-- Agent 4: `/ITTF/WTT/discovery/agent4/scrapers/wtt_ittf_scraper.py`
+- Agent 1: `/ITTF/WTT/research/agents/agent1/findings.md`
+- Agent 1: `/ITTF/WTT/research/agents/agent1/player_ids.json`
+- Agent 2: `/ITTF/WTT/research/agents/agent2/findings.md`
+- Agent 2: `/ITTF/WTT/research/agents/agent2/historical_endpoints.json`
+- Agent 3: `/ITTF/WTT/research/agents/agent3/findings.md`
+- Agent 3: `/ITTF/WTT/research/agents/agent3/match_data_access.json`
+- Agent 4: `/ITTF/WTT/research/agents/agent4/findings.md`
+- Agent 4: `/ITTF/WTT/scripts/wtt_ittf_scraper.py`
 
 ---
 

@@ -277,8 +277,8 @@ Several commercial data providers offer ITTF/WTT data, some with free tiers.
 ## Data Collected
 
 ### Files Created
-- `discovery/agent3/findings.md` - This report
-- `discovery/agent3/match_data_access.json` - Endpoint catalog (pending)
+- `research/agents/agent3/findings.md` - This report
+- `research/agents/agent3/match_data_access.json` - Endpoint catalog (pending)
 
 ### Sample Match Data Structure
 
@@ -471,7 +471,7 @@ Games field is space-separated string, not structured array.
   - ✅ **3 methods found**: Fabrik API, HTML scraping, Commercial APIs
 - [x] Authentication requirements documented
   - ✅ **Documented**: Fabrik = none, Azure API = unknown auth
-- [x] Data saved to `discovery/agent3/match_data_access.json`
+- [x] Data saved to `research/agents/agent3/match_data_access.json`
   - ⏳ **Pending**: Will create now
 - [x] Working curl examples provided
   - ✅ **Provided**: All endpoints tested with curl

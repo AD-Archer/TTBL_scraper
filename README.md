@@ -36,9 +36,33 @@ The project uses multiple specialized AI agents to discover data sources and bui
 
 ## Scrapers Overview
 
+### master_scrape.py - Master Match + Player Dataset
+
+**Location:** `ITTF/WTT/scripts/master_scrape.py`
+
+**Purpose:** Build a single consolidated dataset of players and matches (without rankings).
+
+**What it collects (publicly available):**
+- Matches (including game-by-game points) from results.ittf.link Fabrik JSON
+- Player IDs + names + association codes observed in match rows
+
+**Limitations:**
+- DOB and team are usually not available from public match rows; these fields are saved as `null` unless a public source is added later.
+
+**Run:**
+```bash
+python3 ITTF/WTT/scripts/master_scrape.py --years 2025,2024,2023
+```
+
+**Output:**
+- `ITTF/WTT/artifacts/data/master/dataset.json`
+- `ITTF/WTT/artifacts/data/master/players.json`
+- `ITTF/WTT/artifacts/data/master/matches.json`
+- `ITTF/WTT/artifacts/data/master/player_match_index.json`
+
 ### wtt_ittf_scraper.py - Rankings Scraper
 
-**Location:** `ITTF/WTT/discovery/agent4/scrapers/wtt_ittf_scraper.py`
+**Location:** `ITTF/WTT/scripts/wtt_ittf_scraper.py`
 
 **Purpose:** Collect current player rankings data from the WTT API.
 
@@ -56,7 +80,7 @@ The project uses multiple specialized AI agents to discover data sources and bui
 
 ### comprehensive_collector.py - Unified Data Collector
 
-**Location:** `ITTF/WTT/discovery/agent4/scrapers/comprehensive_collector.py`
+**Location:** `ITTF/WTT/scripts/comprehensive_collector.py`
 
 **Purpose:** Comprehensive collection of player and match data from multiple sources.
 
@@ -109,18 +133,21 @@ pip install requests
 mltt-scrape/
 ├── ITTF/
 │   └── WTT/
-│       ├── discovery/
-│       │   ├── agent1/
-│       │   │   └── player_ids.json       # Known player IDs
-│       │   └── agent4/
-│       │       └── scrapers/
-│       │           ├── wtt_ittf_scraper.py
-│       │           └── comprehensive_collector.py
-│       └── data/                         # WTT/ITTF output directory
-│           └── wtt_ittf/
-│               ├── players/
-│               ├── matches/
-│               └── rankings/
+│       ├── research/
+│       │   └── agents/
+│       │       ├── agent1/
+│       │       │   └── player_ids.json       # Known player IDs
+│       │       └── agent4/
+│       │           └── findings.md
+│       ├── scripts/
+│       │   ├── wtt_ittf_scraper.py
+│       │   └── comprehensive_collector.py
+│       └── artifacts/                     # WTT/ITTF generated output (gitignored)
+│           └── data/
+│               └── wtt_ittf/
+│                   ├── players/
+│                   ├── matches/
+│                   └── rankings/
 └── TTBL/                                 # German Bundesliga scraper
     ├── scrape_ttbl_enhanced.py          # Main scraper script
     ├── verify_elo_data.py               # ELO verification
@@ -145,7 +172,7 @@ mltt-scrape/
 
 **Single Player Rankings:**
 ```bash
-cd ITTF/WTT/discovery/agent4/scrapers
+cd ITTF/WTT/scripts
 python3 wtt_ittf_scraper.py --player 121558
 ```
 
@@ -163,13 +190,13 @@ python3 wtt_ittf_scraper.py --discover 110000 110050
 
 **Full Data Collection:**
 ```bash
-cd ITTF/WTT/discovery/agent4/scrapers
-python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --years 2025
+cd ITTF/WTT/scripts
+python3 comprehensive_collector.py --agent1-file ../research/agents/agent1/player_ids.json --years 2025
 ```
 
 **Multi-Year Collection:**
 ```bash
-python3 comprehensive_collector.py --agent1-file ../../agent1/player_ids.json --years 2025,2024,2023
+python3 comprehensive_collector.py --agent1-file ../research/agents/agent1/player_ids.json --years 2025,2024,2023
 ```
 
 **Custom Output Directory:**
@@ -338,7 +365,7 @@ python3 verify_elo_data.py
 
 **WTT/ITTF Output:**
 ```
-data/wtt_ittf/
+ITTF/WTT/artifacts/data/wtt_ittf/
 ├── players/
 │   ├── players_database.json     # All players
 │   ├── gender/
@@ -353,6 +380,14 @@ data/wtt_ittf/
 ├── rankings/
 │   └── rankings_current.json     # Current rankings
 └── collection_report.json        # Statistics
+```
+
+**Master Output (consolidated):**
+```
+ITTF/WTT/artifacts/data/master/
+├── dataset.json
+├── players.json
+└── matches.json
 ```
 
 **TTBL Output:**
@@ -377,15 +412,17 @@ ttbl_data/
 **WTT/ITTF Source Files:**
 ```
 ITTF/WTT/
-├── discovery/
-│   ├── agent1/
-│   │   ├── findings.md           # Discovery report
-│   │   └── player_ids.json       # Initial player IDs
-│   ├── agent2/findings.md        # Historical limitations
-│   ├── agent3/findings.md        # Match API discovery
-│   └── agent4/
-│       ├── findings.md           # Scraper development
-│       └── scrapers/             # Working scrapers
+├── research/
+│   └── agents/
+│       ├── agent1/
+│       │   ├── findings.md           # Discovery report
+│       │   └── player_ids.json       # Initial player IDs
+│       ├── agent2/findings.md        # Historical limitations
+│       ├── agent3/findings.md        # Match API discovery
+│       └── agent4/
+│           ├── findings.md           # Implementation notes
+│           └── findings_run2.md
+├── scripts/                       # Runnable scrapers/tools
 └── docs/                         # Documentation
     ├── API_DISCOVERY.md
     ├── NEXT_STEPS.md
@@ -516,7 +553,7 @@ This project was developed using specialized AI agents for data discovery and sc
 ## Contact & Support
 
 For issues with the scrapers or data collection:
-1. Check the agent findings in `discovery/agent*/findings.md`
+1. Check the agent findings in `ITTF/WTT/research/agents/agent*/findings.md`
 2. Test API endpoints manually with curl
 3. Review troubleshooting section above
 4. Check for rate limiting or authentication changes

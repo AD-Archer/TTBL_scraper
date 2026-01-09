@@ -45,7 +45,7 @@ curl -s "..." | jq '.'
 ## Data Collected
 
 ### Files Created
-- `discovery/agentX/` [List all files]
+- `research/agents/agentX/` [List all files]
 
 ### Sample Data
 ```json
@@ -117,7 +117,7 @@ curl -s "..." | jq '.'
 ### Python Scripts Created
 ```python
 # Brief description
-# File: discovery/agentX/script.py
+# File: scripts/script.py
 ```
 
 ---

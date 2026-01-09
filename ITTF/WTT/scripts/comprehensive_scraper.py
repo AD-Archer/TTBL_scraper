@@ -20,6 +20,10 @@ from datetime import datetime
 import re
 
 
+WTT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = WTT_ROOT / "artifacts" / "data"
+
+
 @dataclass
 class ComprehensiveScraperConfig:
     """Configuration for the comprehensive scraper"""
@@ -29,7 +33,7 @@ class ComprehensiveScraperConfig:
     player_matches_list_id: str = "31"
     timeout: int = 30
     delay: float = 0.5
-    output_dir: Path = Path("./ITTF/WTT/data")
+    output_dir: Path = DEFAULT_OUTPUT_DIR
 
 
 class ITTFComprehensiveScraper:

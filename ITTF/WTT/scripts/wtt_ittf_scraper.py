@@ -33,6 +33,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+WTT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = WTT_ROOT / "artifacts" / "data" / "wtt_ittf"
+
+
 @dataclass
 class ScraperConfig:
     """Configuration for ITTF/WTT scraper."""
@@ -42,7 +46,7 @@ class ScraperConfig:
     max_retries: int = 3
     rate_limit_delay: float = 1.0
     user_agent: str = "ITTF-Scraper/1.0 (Data Collection)"
-    output_dir: Path = Path("./data/wtt_ittf")
+    output_dir: Path = DEFAULT_OUTPUT_DIR
 
     def __post_init__(self):
         """Ensure output_dir is a Path object."""

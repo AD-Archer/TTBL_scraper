@@ -14,6 +14,9 @@ import requests
 import sys
 import json
 from pathlib import Path
+WTT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = WTT_ROOT / "artifacts" / "data" / "wtt_ittf"
+
 
 BASE_URL = "https://results.ittf.link/index.php"
 
@@ -44,44 +47,29 @@ def test_endpoint(listid: int, params: dict = None, year: int = 2025) -> dict:
         
         content_type = response.headers.get('Content-Type', '')
         is_json = 'application/json' in content_type or 'json' in content_type.lower()
-        
-        content_type = response.headers.get('Content-Type', '')
-        is_json = 'application/json' in content_type or 'json' in content_type.lower()
 
         if is_json:
             data = response.json()
-            item_count = len(data) if isinstance(data, list) else 1
-            print(f"Response is JSON with {item_count} items")
-            if isinstance(data, list) and item_count > 0:
-                print(f"Sample item: {json.dumps(data[0], indent=2)}")
+
+            if isinstance(data, list):
+                item_count = len(data)
+                sample = data[0] if data else None
+                print(f"Response is JSON list with {item_count} items")
+                if sample is not None:
+                    print(f"Sample item: {json.dumps(sample, indent=2)[:1000]}")
+            else:
+                item_count = 1
+                sample = data
+                print("Response is JSON object")
+                print(f"Sample: {json.dumps(sample, indent=2)[:1000]}")
+
             return {
                 'success': True,
                 'listid': listid,
                 'content_type': 'json',
                 'item_count': item_count,
-                'sample': data[0] if isinstance(data, list) else data
+                'sample': sample,
             }
-            else:
-                # Single object
-                print(f"Sample: {json.dumps(data, indent=2)[:500]}")
-                return {
-                    'success': True,
-                    'listid': listid,
-                    'content_type': 'json',
-                    'item_count': 1,
-                    'sample': data
-                }
-            else:
-                # Single object
-                print(f"Sample: {json.dumps(data, indent=2)[:500]}")
-                return {
-                    'success': True,
-                    'listid': listid,
-                    'content_type': 'json',
-                    'item_count': 1,
-                    'sample': data,
-                    'data': data
-                }
         else:
             # HTML response
             html = response.text
@@ -174,7 +162,7 @@ def generate_report(results: dict) -> dict:
 
 def save_report(report: dict, filename: str = "fabrik_api_test_report.json"):
     """Save report to file."""
-    output_dir = Path("./data/wtt_ittf")
+    output_dir = DEFAULT_OUTPUT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
     output_file = output_dir / filename
     

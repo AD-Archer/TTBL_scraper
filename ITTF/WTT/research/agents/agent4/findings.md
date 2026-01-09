@@ -146,7 +146,7 @@ python3 wtt_ittf_scraper.py --discover 110000 111000
 ### Files Created
 
 **Scraper Implementation:**
-- `ITTF/WTT/discovery/agent4/scrapers/wtt_ittf_scraper.py` - Main scraper (402 lines)
+- `ITTF/WTT/scripts/wtt_ittf_scraper.py` - Main scraper (402 lines)
 
 **Features Implemented:**
 1. WTTRestScraper - Base API client with retry logic
@@ -312,8 +312,8 @@ Based on librarian research, API data may only be available from 2018 onwards. O
 ## Success Criteria Met
 
 - [x] Rankings scraper working (tested with player ID 121558)
-- [x] Code in `discovery/agent4/scrapers/`
-- [x] Documentation in `discovery/agent4/findings.md`
+- [x] Code in `ITTF/WTT/scripts/`
+- [x] Documentation in `ITTF/WTT/research/agents/agent4/findings.md`
 - [x] Follows TTBL scraper patterns for consistency
 - [x] Implements rate limiting and retry logic
 - [x] CLI interface for easy operation
@@ -374,7 +374,7 @@ Based on librarian research, API data may only be available from 2018 onwards. O
 pip install requests
 
 # Run scraper
-cd ITTF/WTT/discovery/agent4/scrapers
+cd ITTF/WTT/scripts
 python3 wtt_ittf_scraper.py --player 121558
 ```
 
@@ -389,7 +389,7 @@ python3 wtt_ittf_scraper.py --player 121558
 curl -s "https://wttcmsapigateway-new.azure-api.net/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals?IttfId=121558&q=1"
 
 # Test scraper single player
-cd ITTF/WTT/discovery/agent4/scrapers
+cd ITTF/WTT/scripts
 python3 wtt_ittf_scraper.py --player 121558
 
 # Test scraper with multiple players
@@ -401,7 +401,7 @@ python3 wtt_ittf_scraper.py --discover 110000 110050
 
 ### Python Scripts Created
 
-**File:** `ITTF/WTT/discovery/agent4/scrapers/wtt_ittf_scraper.py`
+**File:** `ITTF/WTT/scripts/wtt_ittf_scraper.py`
 
 **Description:**
 - Main scraper implementation with 402 lines of code

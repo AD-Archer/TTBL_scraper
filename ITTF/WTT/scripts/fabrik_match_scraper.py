@@ -26,6 +26,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+WTT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = str(WTT_ROOT / "artifacts" / "data" / "wtt_ittf")
+
+
 class ScraperConfig:
     """Configuration for Fabrik match scraper."""
 
@@ -34,7 +38,7 @@ class ScraperConfig:
     timeout: int = 30
     rate_limit_delay: float = 1.0
     user_agent: str = "ITTF-Scraper/1.1 (Match Data)"
-    output_dir: str = "./data/wtt_ittf"
+    output_dir: str = DEFAULT_OUTPUT_DIR
 
 
 class Match:

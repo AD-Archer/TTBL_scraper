@@ -671,10 +671,10 @@ Complete System ✅
 ### Communication
 
 **Required Shared Files:**
-- `discovery/player_ids.json` (Agent 1 output)
-- `discovery/historical_endpoints.json` (Agent 2 output)
-- `discovery/match_data_access.json` (Agent 3 output)
-- `scrapers/` (All Agent 4 output)
+- `research/agents/agent1/player_ids.json` (Agent 1 output)
+- `research/agents/agent2/historical_endpoints.json` (Agent 2 output)
+- `research/agents/agent3/match_data_access.json` (Agent 3 output)
+- `scripts/` (Runnable scrapers/tools)
 
 **Update Frequency:**
 - Discovery agents: Report progress every 30 minutes
@@ -722,20 +722,20 @@ Complete System ✅
 1. Start with results.ittf.link player discovery
 2. Move to ITTF/WTT website scraping
 3. Try API brute force on IttfId 110000-130000
-4. Document all findings in `discovery/player_ids.json`
+4. Document all findings in `research/agents/agent1/player_ids.json`
 
 ### Agent 2
 1. Test URL pattern variations for historical data
 2. Try parameter variations on existing endpoint
 3. Check results.ittf.link for archives
-4. Document findings in `discovery/historical_endpoints.json`
+4. Document findings in `research/agents/agent2/historical_endpoints.json`
 
 ### Agent 3
 1. Try authentication bypass methods
 2. Test API version variations
 3. Inspect ITTF/WTT website network traffic
 4. Check for mobile app APIs
-5. Document findings in `discovery/match_data_access.json`
+5. Document findings in `research/agents/agent3/match_data_access.json`
 
 ### Agent 4
 1. Implement rankings scraper (can start immediately)

@@ -218,8 +218,8 @@ curl -sL "https://www.ittf.com/wp-content/uploads/2024/12/2024_52_SEN_MS.html"
 ## Data Collected
 
 ### Files Created
-- `discovery/agent2/findings.md` - This report
-- `discovery/agent2/historical_endpoints.json` - Tested endpoints catalog (created below)
+- `research/agents/agent2/findings.md` - This report
+- `research/agents/agent2/historical_endpoints.json` - Tested endpoints catalog (created below)
 
 ### Sample Data
 
@@ -345,7 +345,7 @@ The historical rankings interface on results.ittf.link has a form-based interfac
 
 - [x] At least 1 working historical endpoint - **FAILED** (no public historical endpoints exist)
 - [ ] Earliest date accessible documented - **PARTIAL** (HTML files exist back to 2001, but Cloudflare blocks access)
-- [ ] Data saved to `discovery/agent2/historical_endpoints.json` - **PENDING** (will create after this report)
+- [ ] Data saved to `research/agents/agent2/historical_endpoints.json` - **PENDING** (will create after this report)
 
 **Overall Assessment:** ✅ Discovery complete (understanding of limitations), but ❌ Cannot access historical data via public API
 
@@ -387,7 +387,7 @@ curl -s "https://wttcmsapigateway-new.azure-api.net/internalttu/" | jq '.' 2>&1 
 None created during discovery phase. Potential script for Agent 4:
 
 ```python
-# File: discovery/agent4/scrapers/historical_html_scraper.py (suggested)
+# File: scripts/historical_html_scraper.py (suggested)
 
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup

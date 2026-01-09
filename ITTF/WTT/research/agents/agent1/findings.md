@@ -100,9 +100,9 @@ By scraping all available rankings categories (senior men/women, junior boys/gir
 ## Data Collected
 
 ### Files Created
-- `discovery/agent1/rankings_scraper.py` - Python script for scraping rankings pages
-- `discovery/agent1/brute_force_scraper.py` - Alternative API brute force approach
-- `discovery/agent1/player_ids.json` - Complete dataset of discovered player IDs
+- `scripts/rankings_scraper.py` - Python script for scraping rankings pages
+- `scripts/brute_force_scraper.py` - Alternative API brute force approach
+- `research/agents/agent1/player_ids.json` - Complete dataset of discovered player IDs
 
 ### Sample Data
 ```json
@@ -187,7 +187,7 @@ By scraping all available rankings categories (senior men/women, junior boys/gir
 
 - [x] 100+ unique IttfId values ✅ (195 found)
 - [x] At least 2 discovery methods ✅ (rankings scraping + main page)
-- [x] Data saved to `discovery/agent1/player_ids.json` ✅
+- [x] Data saved to `research/agents/agent1/player_ids.json` ✅
 
 ---
 

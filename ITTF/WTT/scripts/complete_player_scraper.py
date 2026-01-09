@@ -12,6 +12,10 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
+WTT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = WTT_ROOT / "artifacts" / "data"
+
+
 class CompletePlayerScraper:
     """Scrape all players from ITTF rankings pages"""
 
@@ -119,7 +123,7 @@ class CompletePlayerScraper:
 
     def save_player_database(self, results: Dict[str, Set[str]]):
         """Save the complete player database"""
-        output_dir = Path("./ITTF/WTT/data")
+        output_dir = DEFAULT_OUTPUT_DIR
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # Categorize by gender

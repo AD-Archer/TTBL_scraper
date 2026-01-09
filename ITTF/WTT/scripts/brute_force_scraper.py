@@ -3,6 +3,10 @@ import json
 import time
 from pathlib import Path
 
+
+WTT_ROOT = Path(__file__).resolve().parents[1]
+AGENT1_PLAYER_IDS_FILE = WTT_ROOT / "research" / "agents" / "agent1" / "player_ids.json"
+
 BASE_URL = "https://wttcmsapigateway-new.azure-api.net/internalttu"
 RANKINGS_ENDPOINT = f"{BASE_URL}/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals"
 
@@ -48,7 +52,7 @@ if __name__ == "__main__":
     players = brute_force_range(121500, 121600)
 
     # Save results
-    output_file = Path("ITTF/WTT/discovery/agent1/player_ids.json")
+    output_file = AGENT1_PLAYER_IDS_FILE
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_file, "w") as f:
